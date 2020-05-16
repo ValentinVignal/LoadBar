@@ -1,18 +1,19 @@
-import math
-
 class LoadBar:
     """
 
     """
 
-    def __init__(self, max=100, size=10):
+    def __init__(self, max=100, size=20, head='.', body='.'):
         """
 
         :param max: int: Max value of the load
         """
-        self.i = 0
         self.max = max
         self.size = size
+        self.head = head
+        self.body = body
+
+        self.i = 0      # State of the progress
 
     def start(self):
         """
@@ -30,13 +31,15 @@ class LoadBar:
         self.i += to_add
 
         done = int(min(self.i, self.max) * self.size // self.max)
+        done_head = min(1, done)        # 0 or 1
+        done_body = done - done_head
         todo = self.size - done
         self._print(
-            f'[{"." * done}{" " * todo}]'
+            f'[{self.body * done_body}{self.head * done_head}{" " * todo}]'
         )
 
     def end(self):
-        self._print(f'[{"." * self.size}]', end='\n')
+        self._print(f'[{self.body * self.size}]', end='\n')
 
     def _print(self, to_print, end='', flush=True):
         """
