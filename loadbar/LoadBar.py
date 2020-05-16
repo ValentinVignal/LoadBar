@@ -1,25 +1,25 @@
+import math
+
 class LoadBar:
     """
 
     """
-    def __init__(self, max=100):
+
+    def __init__(self, max=100, size=10):
         """
 
         :param max: int: Max value of the load
         """
         self.i = 0
         self.max = max
-
-        self.loading = False
+        self.size = size
 
     def start(self):
         """
 
         :return:
         """
-        if not self.loading:
-            print('[')
-            self.loading = True
+        self._print('[')
 
     def update(self, to_add=1):
         """
@@ -28,15 +28,23 @@ class LoadBar:
         :return:
         """
         self.i += to_add
-        print('.' * to_add, end='', flush=True)
-        if self.i == self.max:
-            self.end()
+
+        done = int(min(self.i, self.max) * self.size // self.max)
+        todo = self.size - done
+        self._print(
+            f'[{"." * done}{" " * todo}]'
+        )
 
     def end(self):
-        if self.loading:
-            print(']')
-            self.loading = False
+        self._print(f'[{"." * self.size}]', end='\n')
 
-
-
-
+    def _print(self, to_print, end='', flush=True):
+        """
+        Rewrite print function with default args
+        :param to_print:
+        :param end:
+        :param flush:
+        :return:
+        """
+        # \r used to put the cursor at the beginning of the line
+        print(f'\r{to_print}', end=end, flush=flush)
