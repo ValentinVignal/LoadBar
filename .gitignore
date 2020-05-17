@@ -133,3 +133,5 @@ dmypy.json
 
 # Perso
 trash/
+setup.py
+help/
