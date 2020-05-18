@@ -20,7 +20,7 @@ class LoadBar:
 
         :return:
         """
-        self._print('[')
+        self._print(f'[{" " * self.size}]')
 
     def update(self, to_add=1):
         """
