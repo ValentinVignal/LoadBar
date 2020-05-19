@@ -22,26 +22,24 @@ class LoadBar:
 
         :return:
         """
-        self.update(to_add=0)
+        self.update(step=0)
 
-    def update(self, to_add=1):
+    def update(self, to_add=None, step=None, end=''):
         """
 
         :param to_add:
         :return:
         """
-        self.i += to_add
-
-        done = int(min(self.i, self.max) * self.size // self.max)
-        done_head = min(1, done)        # 0 or 1
-        done_body = done - done_head
-        todo = self.size - done
-        self._print(
-            f'{self.border_left}{self.body * done_body}{self.head * done_head}{" " * todo}{self.border_right}'
-        )
+        if step is None:
+            self.i += 1 if to_add is None else to_add
+        else:
+            self.i = step
+        s = ''
+        s += self._get_bar()
+        self._print(s, end=end)
 
     def end(self):
-        self._print(f'{self.border_left}{self.body * self.size}{self.border_right}', end='\n')
+        self.update(step=self.max, end='\n')
 
     def _print(self, to_print, end='', flush=True):
         """
@@ -53,3 +51,12 @@ class LoadBar:
         """
         # \r used to put the cursor at the beginning of the line
         print(f'\r{to_print}', end=end, flush=flush)
+
+    def _get_bar(self):
+        done = int(min(self.i, self.max) * self.size // self.max)
+        todo = self.size - done
+
+        todo_head = min(todo, 1)        # 1 or 0
+        todo_blank = todo - todo_head
+        return f'{self.border_left}{self.body * done}{self.head * todo_head}{" " * todo_blank}{self.border_right}'
+
