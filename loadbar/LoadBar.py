@@ -3,7 +3,7 @@ class LoadBar:
 
     """
 
-    def __init__(self, max=100, size=20, head='.', body='.'):
+    def __init__(self, max=100, size=20, head='.', body='.', border_left='[', border_right=']'):
         """
 
         :param max: int: Max value of the load
@@ -12,6 +12,8 @@ class LoadBar:
         self.size = size
         self.head = head
         self.body = body
+        self.border_left = border_left
+        self.border_right = border_right
 
         self.i = 0      # State of the progress
 
@@ -20,7 +22,7 @@ class LoadBar:
 
         :return:
         """
-        self._print(f'[{" " * self.size}]')
+        self.update(to_add=0)
 
     def update(self, to_add=1):
         """
@@ -35,11 +37,11 @@ class LoadBar:
         done_body = done - done_head
         todo = self.size - done
         self._print(
-            f'[{self.body * done_body}{self.head * done_head}{" " * todo}]'
+            f'{self.border_left}{self.body * done_body}{self.head * done_head}{" " * todo}{self.border_right}'
         )
 
     def end(self):
-        self._print(f'[{self.body * self.size}]', end='\n')
+        self._print(f'{self.border_left}{self.body * self.size}{self.border_right}', end='\n')
 
     def _print(self, to_print, end='', flush=True):
         """
