@@ -1,5 +1,6 @@
 import math
 import time
+import datetime
 
 
 class LoadBar:
@@ -13,6 +14,7 @@ class LoadBar:
 
         :param max: int: Max value of the load
         """
+        self.loading = False
         self.max = max
         self.size = size
         self.head = head
@@ -21,9 +23,12 @@ class LoadBar:
         self.border_right = border_right
         self.show_step = show_step
         self.show_percentage = show_percentage
+        # ----- ETA -----
         self.show_eta = show_eta
         self.eta = None
         self.eta_last_i_t = None
+        self.start_time = None
+        self.stop_time = None
 
         self._i = 0  # State of the progress
 
@@ -52,12 +57,14 @@ class LoadBar:
 
         self._i = i
 
-
     def start(self):
         """
 
         :return:
         """
+        self.loading = True
+        if self.show_eta:
+            self.start_time = time.time()
         self.update(step=0)
 
     def update(self, to_add=None, step=None, end=''):
@@ -80,6 +87,9 @@ class LoadBar:
         self._print(s, end=end)
 
     def end(self):
+        self.loading = False
+        if self.show_eta:
+            self.stop_time = time.time()
         self.update(step=self.max, end='\n')
 
     def _print(self, to_print, end='', flush=True):
@@ -119,6 +129,15 @@ class LoadBar:
     def _get_eta(self):
         if not self.show_eta:
             return ''
-        remaining_time = None if self.eta is None else self.eta * (self.max - self.i) / self.max
-        return f'ETA {remaining_time}'
+        eta = '-:--:--'     # if self.eta is None
+        if self.loading:
+            if self.eta is not None:
+                eta = self.eta * (self.max - self.i) / self.max
+                eta = datetime.timedelta(seconds=int(eta))
+            return f'ETA {eta}'
+        else:
+            if self.start_time is not None and self.stop_time is not None:
+                eta = int(self.stop_time - self.start_time)
+                eta = datetime.timedelta(seconds=eta)
+            return f'Time {eta}'
 
