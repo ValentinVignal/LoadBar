@@ -114,7 +114,7 @@ class LoadBar:
     def _get_step(self):
         if not self.show_step:
             return ''
-        digit_nb = int(1 + math.ceil(math.log10(self.max)))
+        digit_nb = int(1 + math.floor(math.log10(self.max)))
         return '{0:{1}}'.format(self.i, digit_nb) + f'/{self.max}'
 
     def _get_percentage(self):
