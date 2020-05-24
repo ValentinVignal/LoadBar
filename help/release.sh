@@ -2,8 +2,8 @@
 # This file is used to make a new release
 
 echo -e "\e[31m /!\ Make sure you have updated the version number /!\ \e[0m"
-read -p "New release ? (y/n) " -n 1 -r
-echo    # (optional) move to a new line
+read -p "New release ? (y/n) " -r   # -n 1 to don't have to press enter
+# echo    # (optional) move to a new line
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
     echo -n Password:

@@ -19,7 +19,7 @@ class ColorBar(LoadBar):
         self.on_color = None if on_color is None else f'on_{on_color}'
     
     def start(self, *args, **kwargs):
-        os.system('')
+        os.system('')       # To enable colors on some terminals
         super(ColorBar, self).start(*args, **kwargs)
 
     def _print(self, to_print, *args, **kwargs):

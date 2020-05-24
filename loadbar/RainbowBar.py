@@ -29,7 +29,7 @@ class RainbowBar(LoadBar):
         super(RainbowBar, self).__init__(*args, **kwargs)
 
     def start(self, *args, **kwargs):
-        os.system('')
+        os.system('')       # To enable colors on some terminals
         super(RainbowBar, self).start(*args, **kwargs)
 
     def _to_rainbow(self, string):
