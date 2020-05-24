@@ -21,4 +21,6 @@ for i in range(100):
 bar.end()
 ```
 
-See the doc
+![image](images/loadbar.gif)
+
+[See the documentation](doc/Loadbar.md)

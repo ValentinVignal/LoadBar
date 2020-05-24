@@ -85,4 +85,41 @@ For example, `step=10` will set the progress to `10`
 
 ## ColorBar
 
+`ColorBar` allows you to create a Loading bar with a specific color.
+- `color` to indicates the color of the loading bar
+- `on_color` to indicates the color of the background
+
+```python
+import loadbar
+import time
+
+bar = loadbar.ColorBar(
+    color=loadbar.Colors.cyan       # or 'cyan'
+)
+bar.start()
+for i in range(100):
+    time.sleep(0.1)
+    bar.update()
+bar.end()
+```
+
+![image](../images/colorbar.gif)
+
+
 ## RainbowBar
+
+`ColorBar` allows you to create a beautiful Loading bar with the rainbow colors :rainbow:
+
+```python
+import loadbar
+import time
+
+bar = loadbar.RainbowBar()
+bar.start()
+for i in range(100):
+    time.sleep(0.1)
+    bar.update()
+bar.end()
+```
+
+![image](../images/rainbowbar.gif)
