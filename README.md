@@ -23,4 +23,4 @@ bar.end()
 
 ![image](images/loadbar.gif)
 
-[See the documentation](doc/Loadbar.md)
+[See the documentation](https://github.com/ValentinVignal/LoadBar/blob/master/doc/Loadbar.md)
