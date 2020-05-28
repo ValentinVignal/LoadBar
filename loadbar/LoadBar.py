@@ -67,10 +67,10 @@ class LoadBar:
             self.start_time = time.time()
         self.update(step=0)
 
-    def update(self, to_add=None, step=None, end='', new_line=False):
+    def update(self, to_add=None, step=None, end='', start='\r'):
         """
 
-        :param new_line: Boolean saying whether to print on a new line
+        :param start:
         :param end:
         :param step:
         :param to_add:
@@ -87,7 +87,7 @@ class LoadBar:
         l.append(self._get_bar())
         if self.show_eta: l.append(self._get_eta())
         s = ' '.join(l)
-        self._print(s, end=end, new_line=new_line)
+        self._print(s, end=end, start=start)
 
     def end(self):
         self.loading = False
@@ -95,18 +95,17 @@ class LoadBar:
             self.stop_time = time.time()
         self.update(step=self.max, end='\n')
 
-    def _print(self, to_print, end='', flush=True, new_line=False):
+    def _print(self, to_print, end='', flush=True, start='\r'):
         """
         Rewrite print function with default args
         :param to_print:
         :param end:
         :param flush:
-        :param new_line
+        :param start
         :return:
         """
         # \r used to put the cursor at the beginning of the line
-        leading = '\n' if new_line else '\r'
-        print(f'{leading}{to_print}', end=end, flush=flush)
+        print(f'{start}{to_print}', end=end, flush=flush)
 
     def _get_bar(self):
         done = int(min(self.i, self.max) * self.size // self.max)
