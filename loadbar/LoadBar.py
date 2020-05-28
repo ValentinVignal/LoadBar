@@ -9,7 +9,7 @@ class LoadBar:
     """
 
     def __init__(self, max=100, size=20, head='.', body='.', border_left='[', border_right=']', show_step=True,
-                 show_percentage=True, show_eta=True):
+                 show_percentage=True, show_eta=True, title=None):
         """
 
         :param max: int: Max value of the load
@@ -29,6 +29,8 @@ class LoadBar:
         self.eta_last_i_t = None
         self.start_time = None
         self.stop_time = None
+        # ----- End ETA -----
+        self.title = title
 
         self._i = 0  # State of the progress
 
@@ -57,7 +59,7 @@ class LoadBar:
 
         self._i = i
 
-    def start(self):
+    def start(self, end=''):
         """
 
         :return:
@@ -65,9 +67,9 @@ class LoadBar:
         self.loading = True
         if self.show_eta:
             self.start_time = time.time()
-        self.update(step=0)
+        self.update(step=0, end=end)
 
-    def update(self, to_add=None, step=None, end='', start='\r'):
+    def update(self, step=None, to_add=None, end='', start='\r'):
         """
 
         :param start:
@@ -82,6 +84,7 @@ class LoadBar:
         else:
             self.i = step
         l = list()
+        if self.title is not None: l.append(self.title)
         if self.show_step: l.append(self._get_step())
         if self.show_percentage: l.append(self._get_percentage())
         l.append(self._get_bar())
