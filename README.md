@@ -21,6 +21,6 @@ for i in range(100):
 bar.end()
 ```
 
-![image](images/loadbar.gif)
+![image](https://github.com/ValentinVignal/LoadBar/blob/master/images/loadbar.gif)
 
 [See the documentation](https://github.com/ValentinVignal/LoadBar/blob/master/doc/Loadbar.md)
