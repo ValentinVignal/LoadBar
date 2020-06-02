@@ -9,7 +9,7 @@ class LoadBar:
     """
 
     def __init__(self, max=100, size=20, head='.', body='.', border_left='[', border_right=']', show_step=True,
-                 show_percentage=True, show_eta=True, title=None):
+                 show_percentage=True, show_eta=True, title=None, show_total_time=True):
         """
 
         :param max: int: Max value of the load
@@ -29,8 +29,10 @@ class LoadBar:
         self.eta_last_i_t = None
         self.start_time = None
         self.stop_time = None
+        self.show_total_time = show_total_time or show_eta
         # ----- End ETA -----
         self.title = title
+
 
         self._i = 0  # State of the progress
 
@@ -40,7 +42,7 @@ class LoadBar:
 
     @i.setter
     def i(self, i):
-        if self.show_eta:
+        if self.use_time:
             # Do some work to see how long it is gonna last
             if self.eta_last_i_t is not None:
                 if self.eta_last_i_t[0] > i:
@@ -59,13 +61,17 @@ class LoadBar:
 
         self._i = i
 
+    @property
+    def use_time(self):
+        return self.show_eta or self.show_total_time
+
     def start(self, end=''):
         """
 
         :return:
         """
         self.loading = True
-        if self.show_eta:
+        if self.use_time:
             self.start_time = time.time()
         self.update(step=0, end=end)
 
@@ -88,13 +94,14 @@ class LoadBar:
         if self.show_step: l.append(self._get_step())
         if self.show_percentage: l.append(self._get_percentage())
         l.append(self._get_bar())
-        if self.show_eta: l.append(self._get_eta())
+        if self.show_eta and self.loading: l.append(self._get_eta())
+        if self.show_total_time and not self.loading: l.append(self._get_eta())
         s = ' '.join(l)
         self._print(s, end=end, start=start)
 
     def end(self):
         self.loading = False
-        if self.show_eta:
+        if self.use_time:
             self.stop_time = time.time()
         self.update(step=self.max, end='\n')
 
@@ -134,15 +141,17 @@ class LoadBar:
         return percentage_string
 
     def _get_eta(self):
-        if not self.show_eta:
-            return ''
         eta = '-:--:--'     # if self.eta is None
         if self.loading:
+            if not self.show_eta:
+                return ''
             if self.eta is not None:
                 eta = self.eta * (self.max - self.i) / self.max
                 eta = datetime.timedelta(seconds=int(eta))
             return f'ETA {eta}'
         else:
+            if not self.show_total_time:
+                return ''
             if self.start_time is not None and self.stop_time is not None:
                 eta = int(self.stop_time - self.start_time)
                 eta = datetime.timedelta(seconds=eta)
