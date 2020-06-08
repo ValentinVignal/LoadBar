@@ -9,7 +9,7 @@ class LoadBar:
     """
 
     def __init__(self, max=100, size=20, head='.', body='.', border_left='[', border_right=']', show_step=True,
-                 show_percentage=True, show_eta=True, title=None, show_total_time=True):
+                 show_percentage=True, show_eta=True, title=None, show_total_time=True, show_time=False):
         """
 
         :param max: int: Max value of the load
@@ -29,7 +29,8 @@ class LoadBar:
         self.eta_last_i_t = None
         self.start_time = None
         self.stop_time = None
-        self.show_total_time = show_total_time or show_eta
+        self.show_time = show_time
+        self.show_total_time = show_total_time or show_eta or show_time
         # ----- End ETA -----
         self.title = title
 
@@ -94,8 +95,8 @@ class LoadBar:
         if self.show_step: l.append(self._get_step())
         if self.show_percentage: l.append(self._get_percentage())
         l.append(self._get_bar())
+        if self.show_time or (self.show_total_time and not self.loading): l.append(self._get_time())
         if self.show_eta and self.loading: l.append(self._get_eta())
-        if self.show_total_time and not self.loading: l.append(self._get_eta())
         s = ' '.join(l)
         self._print(s, end=end, start=start)
 
@@ -140,6 +141,22 @@ class LoadBar:
             percentage_string = f'({percentage_string})'
         return percentage_string
 
+    def _get_time(self):
+        if self.loading:
+            if not self.show_time:
+                return ''
+            else:
+                current_time = time.time() - self.start_time
+                current_time = datetime.timedelta(seconds=int(current_time))
+                return f'Time {current_time}'
+        else:
+            if not self.show_total_time:
+                return ''
+            if self.start_time is not None and self.stop_time is not None:
+                total_time = int(self.stop_time - self.start_time)
+                total_time = datetime.timedelta(seconds=total_time)
+                return f'Time {total_time}'
+
     def _get_eta(self):
         eta = '-:--:--'     # if self.eta is None
         if self.loading:
@@ -150,10 +167,5 @@ class LoadBar:
                 eta = datetime.timedelta(seconds=int(eta))
             return f'ETA {eta}'
         else:
-            if not self.show_total_time:
-                return ''
-            if self.start_time is not None and self.stop_time is not None:
-                eta = int(self.stop_time - self.start_time)
-                eta = datetime.timedelta(seconds=eta)
-            return f'Time {eta}'
+            return ''
 
